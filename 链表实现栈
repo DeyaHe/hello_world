@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+
+typedef struct NODE
+{
+    int member;
+    struct NODE *next;
+}node;
+
+typedef struct STACK{
+    node *top;
+    node *bottom;
+}stack;
+
+void initstack(stack *pstack)
+{
+    pstack->top = (node*)malloc(sizeof(node));
+    if (pstack->top == NULL)
+    {
+        printf("Error\n");
+        exit(0);
+    }
+    pstack->bottom = pstack->top;
+    return;
+}
+
+int is_empty(stack *pstack)
+{
+    if (pstack->bottom == pstack->top)
+    {
+        return 0;
+    }
+    return 1;
+}
+
+void push(stack *pstack)
+{
+    int data;
+    node *new_item;
+    printf("输入数据：");
+    scanf("%d",&data);
+    new_item = (node*)malloc(sizeof(node));
+    if (!new_item)
+    {
+        printf("Error\n");
+        return;
+    }
+    new_item->member = data;
+    new_item->next = pstack->top;
+    pstack->top = new_item;
+    return;
+}
+
+void pop(stack *pstack)
+{
+    node *current;
+    if (!is_empty(pstack))
+    {
+        printf("Error\n");
+        return;
+    }
+    current = pstack->top;
+    printf("删除的数字为：%d\n",current->member);
+    pstack->top = current->next;
+    free(current);
+    return;
+}
+
+void print(stack *pstack)
+{
+    node *current;
+    if (!is_empty(pstack))
+    {
+        printf("栈为空\n");
+        return;
+    }
+    current = pstack->top;
+    do
+    {
+        printf("%d ",current->member);
+        current = current->next;
+    }while (current != pstack->bottom);
+    printf("\n");
+    return;
+}
+
+int main()
+{
+    stack *pstack = (stack*)malloc(sizeof(stack));
+    char choice;
+    initstack(pstack);
+    while (1)
+    {
+        printf("1.push\t2.pop\n3.遍历\t0.退出\n");
+        scanf(" %c",&choice);
+        switch (choice)
+        {
+        case '0':
+            exit(0);
+            break;
+        case '1':
+            push(pstack);
+            break;
+        case '2':
+            pop(pstack);
+            break;
+        case '3':
+            print(pstack);
+            break;
+        }
+    }
+    return 0;
+}
